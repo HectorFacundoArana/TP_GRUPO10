@@ -131,8 +131,8 @@ while(True):
 				if not procesarImpresion:
 					break  # Corta el for de prioridades cuando el usuario decide no continuar
 
-				for i in range(tamanio(centro)):
-					aux = recuperarTrabajo(centro, i)
+				for trabajo in range(tamanio(centro)):
+					aux = recuperarTrabajo(centro, trabajo)
 					if verPrioridad(aux) == prioridad:
 						print(f'''
 						JobID: {verJobid(aux)}
@@ -158,8 +158,8 @@ while(True):
 			print("No hay trabajos en la cola de impresion. Volviendo al menu.")
 	
 		for prioridad in PRIORIDADES_VALIDAS:
-			for i in range(tamanio(centro)):
-				aux = recuperarTrabajo(centro, i)
+			for trabajo in range(tamanio(centro)):
+				aux = recuperarTrabajo(centro, trabajo)
 				if verPrioridad(aux) == prioridad:
 					print(f'''
 					JobID: {verJobid(aux)}
