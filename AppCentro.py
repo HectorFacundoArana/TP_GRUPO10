@@ -152,45 +152,23 @@ while(t!=0):
 	#4°: Visualizacion de la Cola de Impresion
 	elif(t==4):
 		print("Visualizacion de la cola de impresion")
-		if (centroVacio(centro)==False):
-			for i in range(tamanio(centro)):
-				aux=recuperarTrabajo(centro,i)
-				if(verPrioridad(aux)=='alta'):
-					print(f'''
-					JobID: {verJobid(aux)}
-					Nombre: {verNombre(aux)}
-					Formato: {verFormato(aux)}
-					Cantidad de paginas: {verPaginas(aux)}
-					Nivel de prioridad: {verPrioridad(aux)}
-					Fecha: {verFecha(aux)}
-					Hora: {verHora(aux)}
-					''')
-			for j in range(tamanio(centro)):
-				aux=recuperarTrabajo(centro,j)
-				if(verPrioridad(aux)=='media'):
-					print(f'''
-					JobID: {verJobid(aux)}
-					Nombre: {verNombre(aux)}
-					Formato: {verFormato(aux)}
-					Cantidad de paginas: {verPaginas(aux)}
-					Nivel de prioridad: {verPrioridad(aux)}
-					Fecha: {verFecha(aux)}
-					Hora: {verHora(aux)}
-					''')
-			for k in range(tamanio(centro)):
-				aux=recuperarTrabajo(centro,k)
-				if(verPrioridad(aux)=='baja'):
-					print(f'''
-					JobID: {verJobid(aux)}
-					Nombre: {verNombre(aux)}
-					Formato: {verFormato(aux)}
-					Cantidad de paginas: {verPaginas(aux)}
-					Nivel de prioridad: {verPrioridad(aux)}
-					Fecha: {verFecha(aux)}
-					Hora: {verHora(aux)}
-					''')
-		else:
+		if(centroVacio(centro)==True):
 			print("No hay trabajos en la cola de impresion. Volviendo al menu.")
+	
+		for prioridad in PRIORIDADES_VALIDAS:
+			for i in range(tamanio(centro)):
+				aux = recuperarTrabajo(centro, i)
+				if verPrioridad(aux) == prioridad:
+					print(f'''
+					JobID: {verJobid(aux)}
+					Nombre: {verNombre(aux)}
+					Formato: {verFormato(aux)}
+					Cantidad de paginas: {verPaginas(aux)}
+					Nivel de prioridad: {verPrioridad(aux)}
+					Fecha: {verFecha(aux)}
+					Hora: {verHora(aux)}
+					''')
+
 
 	#5°: Reajuste Masivo por Fecha
 	elif(t==5):
