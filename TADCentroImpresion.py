@@ -28,4 +28,4 @@ def existeTrabajo(centro,trabajo):
 def centroVacio(centro):
 
 	#Retorna True si centro no tiene elementos
-	return len(centro)==0
+	return esVacia(centro)

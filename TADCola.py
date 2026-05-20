@@ -3,9 +3,8 @@ def crearCola():
 	return []
 
 def esVacia(cola):
-	condicion = len(cola)==0
 	#Retorna Verdadero si la cola no tiene elementos
-	return condicion
+	return len(cola)==0
 
 def encolar(cola,elem):
 	#Agrega un elemento al final de la cola
