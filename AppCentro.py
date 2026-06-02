@@ -40,11 +40,11 @@ centro=crearCentro()
 # Agregamos trabajos 
 
 agregarTrabajo(centro,[0, "Pedro", "PDF", 25, "baja", "20/05/2026", "12:30"])
-agregarTrabajo(centro,[1, "Ana", "WORD", 15, "media", "20/05/2026", "13:00"])
-agregarTrabajo(centro,[2, "Carlos", "EXCEL", 5, "alta", "20/05/2026", "14:00"])
+agregarTrabajo(centro,[1, "Ana", "IMAGEN", 15, "media", "20/05/2026", "13:00"])
+agregarTrabajo(centro,[2, "Carlos", "TEXTO", 5, "alta", "20/05/2026", "14:00"])
 agregarTrabajo(centro,[3, "Elena", "PDF", 6, "baja", "20/05/2026", "15:00"])
-agregarTrabajo(centro,[4, "Luis", "WORD", 12, "media", "20/05/2026", "16:00"])
-agregarTrabajo(centro,[5, "Maria", "EXCEL", 5, "alta", "20/05/2026", "17:00"])
+agregarTrabajo(centro,[4, "Luis", "IMAGEN", 12, "media", "20/05/2026", "16:00"])
+agregarTrabajo(centro,[5, "Maria", "TEXTO", 5, "alta", "20/05/2026", "17:00"])
 
 
 
