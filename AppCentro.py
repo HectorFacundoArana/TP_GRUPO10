@@ -1,3 +1,5 @@
+from TADCentroImpresion import recuperarTrabajo
+import contextlib
 from TADCentroImpresion import *
 from TADTrabajo import *
 from TADCola import *
@@ -35,60 +37,125 @@ def pedir_formato():
 			# Si no es valida, aviso y el while vuelve a pedir el input
 			print("-> Formato invalida. Solo se permite: PDF, Imagen o Texto.")
 
-centro=crearCentro()
+def existejid(centro, jid):
+	for i in range(tamanio(centro)):
+		aux = recuperarTrabajo(centro, i)
+		if verJobid(aux) == jid:
+			return True
+	return False
+
+centro = crearCentro()
 
 # Agregamos trabajos 
 
-agregarTrabajo(centro,[0, "Pedro", "PDF", 25, "baja", "20/05/2026", "12:30"])
-agregarTrabajo(centro,[1, "Ana", "IMAGEN", 15, "media", "20/05/2026", "13:00"])
-agregarTrabajo(centro,[2, "Carlos", "TEXTO", 5, "alta", "20/05/2026", "14:00"])
-agregarTrabajo(centro,[3, "Elena", "PDF", 6, "baja", "20/05/2026", "15:00"])
-agregarTrabajo(centro,[4, "Luis", "IMAGEN", 12, "media", "20/05/2026", "16:00"])
-agregarTrabajo(centro,[5, "Maria", "TEXTO", 5, "alta", "20/05/2026", "17:00"])
+t0 = crearTrabajo()
+cargarTrabajo(t0, 0, "pedro", "pdf", 25, "baja", "20/05/2026", "12:30")
+agregarTrabajo(centro, t0)
+
+t1 = crearTrabajo()
+cargarTrabajo(t1, 1, "ana", "imagen", 15, "media", "20/05/2026", "13:00")
+agregarTrabajo(centro, t1)
+
+t2 = crearTrabajo()
+cargarTrabajo(t2, 2, "carlos", "texto", 5, "alta", "20/05/2026", "14:00")
+agregarTrabajo(centro, t2)
+
+t3 = crearTrabajo()
+cargarTrabajo(t3, 3, "elena", "pdf", 6, "baja", "20/05/2026", "15:00")
+agregarTrabajo(centro, t3)
+
+t4 = crearTrabajo()
+cargarTrabajo(t4, 4, "luis", "imagen", 12, "media", "20/05/2026", "16:00")
+agregarTrabajo(centro, t4)
+
+t5 = crearTrabajo()
+cargarTrabajo(t5, 5, "maria", "texto", 5, "alta", "20/05/2026", "17:00")
+agregarTrabajo(centro, t5)
+
+t6 = crearTrabajo()
+cargarTrabajo(t6, 6, "jose", "pdf", 8, "baja", "21/05/2026", "09:15")
+agregarTrabajo(centro, t6)
+
+t7 = crearTrabajo()
+cargarTrabajo(t7, 7, "lucia", "imagen", 20, "media", "21/05/2026", "10:30")
+agregarTrabajo(centro, t7)
+
+t8 = crearTrabajo()
+cargarTrabajo(t8, 8, "marcos", "texto", 10, "alta", "22/05/2026", "11:45")
+agregarTrabajo(centro, t8)
+
+t9 = crearTrabajo()
+cargarTrabajo(t9, 9, "sofia", "pdf", 3, "media", "22/05/2026", "14:20")
+agregarTrabajo(centro, t9)
 
 
 
-while(True):
-	print(f'''
-	1-Recepcion de documentos
-	2-Cambio de prioridad individual
-	3-Procesar impresion ({tamanio(centro)} En cola)
-	4-Visualizacion de la cola de impresion
-	5-Reajuste por fecha
-	6-Filtrado por formato (eliminar)
-	7-Filtrado por franja horaria
-	0-Cerrar menu''')
+while True: 
+	print("1-Recepcion de documentos")
+	print("2-Cambio de prioridad individual")
+	print(f"3-Procesar impresion ({tamanio(centro)} en cola)")
+	print("4-Visualizacion de la cola de impresion")
+	print("5-Reajuste por fecha")
+	print("6-Filtrado por formato (eliminar)")
+	print("7-Filtrado por franja horaria")
+	print("0-Cerrar menu")
+	try:
+		opcion = int(input("Ingrese una opcion: "))
+	except ValueError:
+		print("Error, debe ingresar un numero entero")
+		continue
+	
 
-	opcion=int(input())
-	#1°: Recepcion de Documentos
-	if(opcion==1):
-		continuarAgregando = True
-		while (continuarAgregando):
-			trabajo=crearTrabajo()
-			jidValido=False
-			while(jidValido==False):
-				jid=int(input("Ingrese JobID: "))
-				if(centroVacio(centro)==False):
-					for i in range (tamanio(centro)):
-						aux=recuperarTrabajo(centro,i)
-						if(jid==verJobid(aux)):
-							print("JobID ya usado. Por favor ingrese otro.")
-							break
-						if(i==(tamanio(centro)-1)):
-							print("JobID valido.")
-							jidValido=True
-				else:
-					print("JobID valido.")
-					jidValido=True
-			nombre=input("Ingrese nombre del documento: ").lower()
-			formato=pedir_formato()
-			paginas=int(input("Ingrese cantidad de paginas: "))
-			prioridad=pedir_prioridad()
-			fecha=input("Ingrese fecha (DD/MM/AAAA): ")
-			hora=input("Ingrese hora (HH:MM): ")
+		#1: Recepcion de Documentos
+	#Verificacion de ID
+	if opcion == 1:
+		while True:
+			trabajo = crearTrabajo()
+			while True:
+				try:
+					jid = int(input("Ingrese ID del trabajo: "))
+					if existejid(centro, jid):
+						print("ID ya utilizado, ingresar otro")
+					else:
+						print("ID valido")
+						break
+				except ValueError:
+					print("Error: El ID debe ser un numero entero")
 
-			cargarTrabajo(trabajo,jid,nombre,formato,paginas,prioridad,fecha,hora)
-			print("Trabajo cargado correctamente")
+			#Carga de los demas datos
+			nombre = input("Ingrese nombre del documento: ").lower()
+			formato = pedir_formato()
+			while True:
+				try:
+					paginas = int(input("Ingrese cantidad de paginas: "))
+					if paginas > 0:
+						break
+					else:
+						print("La cantidad de paginas debe ser mayor a 0")	
+				except ValueError:
+					print("Error: Debe ingresar un numero entero")
+				
+			prioridad = pedir_prioridad()
+			while True:
+				try:
+					fecha = input("Ingrese fecha (DD/MM/AAAA): ")
+					datetime.strptime(fecha, "%d/%m/%Y")
+					break
+				except ValueError:
+					print("Error: Formato de fecha invalido. Debe ser DD/MM/AAAA")
+
+			while True:
+				try:
+					hora = input("Ingrese hora (HH:MM): ")
+					datetime.strptime(hora, "%H:%M")
+					break
+				except ValueError:
+					print("Error: Formato de hora invalido. Debe ser HH:MM")
+
+			cargarTrabajo(trabajo, jid, nombre, formato, paginas, prioridad, fecha, hora)
+			
+			#Muestra los datos cargados para verificar que sea correcto
+			print("Cargado correctamente")
 			print(verJobid(trabajo))
 			print(verNombre(trabajo))
 			print(verFormato(trabajo))
@@ -96,62 +163,57 @@ while(True):
 			print(verPrioridad(trabajo))
 			print(verFecha(trabajo))
 			print(verHora(trabajo))
-			agregarTrabajo(centro,trabajo)
+			agregarTrabajo(centro, trabajo)
+			
+			#Consulta para seguir cargando trabajo
+			continuar = input("Desea cargar mas trabajo? S/N: ").upper()
+			if continuar != "S":
+				break
 
-			continuarAgregando=input("¿Desea agregar mas trabajos a la cola de impresion?(S/N): ").upper()
-			if continuarAgregando != "S":
-				continuarAgregando = False
 
-	#2°: Cambio de Prioridad Individual
-	elif(opcion==2):
-		print("Cambio de prioridad a un trabajo")
-		jobid=int(input("Ingrese el JobID del trabajo para modificar su prioridad: "))
-		print("Ingrese nueva prioridad del trabajo")
-		nuevaPrio=pedir_prioridad()
-		encontrado=False
-		for i in range(tamanio(centro)):
-			aux=recuperarTrabajo(centro,i)
-			if (jobid==verJobid(aux)):
-				modPrioridad(aux,nuevaPrio)
-				print("Se ha modificado la prioridad del trabajo a ",nuevaPrio)
-				encontrado=True
-		if (encontrado==False):
-			print("No se ha encontrado un trabajo con JobID ",jobid)
-	#3°: Procesar Impresion (Atencion de la Cola)
+	#2: Cambio de Prioridad Individual
+	elif opcion == 2:
+		print("Cambio de Prioridad")
+		while True:
+			try:
+				jid = int(input("Ingrese ID del trabajo: "))
+				if existejid(centro, jid):
+					nuevaPrio = pedir_prioridad()
+					for i in range(tamanio(centro)):
+						aux = recuperarTrabajo(centro, i)
+						if verJobid(aux) == jid:
+							modPrioridad(aux, nuevaPrio)
+							print("Se modifico correctamente")
+							break
+					break
+
+				else:
+						print("ID valido")
+			except ValueError:
+				print("Error: El ID debe ser un numero entero")
+				continue
+
+
+	#3: Procesar Impresion (Atencion de la Cola)
 	elif(opcion == 3):
-		procesarImpresion = True
-
-		while procesarImpresion:
-
+		while True:
 			if centroVacio(centro):
 				print("No hay trabajos en la cola de impresion. Volviendo al menu.")
 				break
+			aux = recuperarTrabajo(centro, 0)
+			print(f"\nJobID: {verJobid(aux)}")
+			print(f"Nombre: {verNombre(aux)}")
+			print(f"Formato: {verFormato(aux)}")
+			print(f"Cantidad de paginas: {verPaginas(aux)}")
+			print(f"Nivel de prioridad: {verPrioridad(aux)}")
+			print(f"Fecha: {verFecha(aux)}")
+			print(f"Hora: {verHora(aux)}")
+			eliminarTrabajo(centro, aux)
+			continuar = input("¿Desea continuar con las impresiones?(S/N): ").upper()
+			if continuar != "S":
+				break
 
-			for prioridad in PRIORIDADES_VALIDAS:
-				if not procesarImpresion:
-					break  # Corta el for de prioridades cuando el usuario decide no continuar
-
-				for trabajo in range(tamanio(centro)):
-					aux = recuperarTrabajo(centro, trabajo)
-					if verPrioridad(aux) == prioridad:
-						print(f'''
-						JobID: {verJobid(aux)}
-						Nombre: {verNombre(aux)}
-						Formato: {verFormato(aux)}
-						Cantidad de paginas: {verPaginas(aux)}
-						Nivel de prioridad: {verPrioridad(aux)}
-						Fecha: {verFecha(aux)}
-						Hora: {verHora(aux)}
-						''')
-						eliminarTrabajo(centro, aux)
-
-						continuar = input("¿Desea continuar con las impresiones?(S/N): ").upper()
-						if continuar == "N":
-							procesarImpresion = False
-						break
-
-
-	#4°: Visualizacion de la Cola de Impresion
+	#4: Visualizacion de la Cola de Impresion
 	elif(opcion==4):
 		print("Visualizacion de la cola de impresion")
 		if(centroVacio(centro)==True):
@@ -161,51 +223,45 @@ while(True):
 			for trabajo in range(tamanio(centro)):
 				aux = recuperarTrabajo(centro, trabajo)
 				if verPrioridad(aux) == prioridad:
-					print(f'''
-					JobID: {verJobid(aux)}
-					Nombre: {verNombre(aux)}
-					Formato: {verFormato(aux)}
-					Cantidad de paginas: {verPaginas(aux)}
-					Nivel de prioridad: {verPrioridad(aux)}
-					Fecha: {verFecha(aux)}
-					Hora: {verHora(aux)}
-					''')
+					print(f"\nJobID: {verJobid(aux)}")
+					print(f"Nombre: {verNombre(aux)}")
+					print(f"Formato: {verFormato(aux)}")
+					print(f"Cantidad de paginas: {verPaginas(aux)}")
+					print(f"Nivel de prioridad: {verPrioridad(aux)}")
+					print(f"Fecha: {verFecha(aux)}")
+					print(f"Hora: {verHora(aux)}")
 
-
-	#5°: Reajuste Masivo por Fecha
+	#5: Reajuste Masivo por Fecha
 	elif(opcion==5):
 		print("Reajuste de prioridad a Baja de los trabajos de un mes")
 		nuevaPrio='baja'
 		mesInput=input("Ingrese mes(MM): ")
-		#Uso de try para asegurar el formato correcto del input de mes
 		try:
-			#Transformo el input que es un string a un formato fecha
 			mes_comp=datetime.strptime(mesInput,"%m").month
 			for i in range(tamanio(centro)):
 				aux=recuperarTrabajo(centro,i)
-				if(mes_comp==verFecha(aux).month):
+				fecha_obj=datetime.strptime(verFecha(aux),"%d/%m/%Y")
+				if(mes_comp==fecha_obj.month):
 					modPrioridad(aux,nuevaPrio)
 		except ValueError:
 			print("Error: el mes ingreado no es valido. Ingresar de 01 a 12")
 
-	#6: Filtrado por Formato (eliminacion)
+	#6: Filtrado por Formato (eliminar)
 	elif(opcion==6):
 		print("Eliminacion por formato de trabajo")
 		i=0
 		form=pedir_formato()
 		while(i<(tamanio(centro))):
 			aux=recuperarTrabajo(centro,i)
-			if(form==verFormato(aux)):
-				print(f'''
-				JobID: {verJobid(aux)}
-				Nombre: {verNombre(aux)}
-				Formato: {verFormato(aux)}
-				Cantidad de paginas: {verPaginas(aux)}
-				Nivel de priorirdad: {verPrioridad(aux)}
-				Fecha: {verFecha(aux)}
-				Hora: {verHora(aux)}
-				Trabajo eliminado.
-				''')
+			if(form==verFormato(aux).lower()):
+				print(f"\nJobID: {verJobid(aux)}")
+				print(f"Nombre: {verNombre(aux)}")
+				print(f"Formato: {verFormato(aux)}")
+				print(f"Cantidad de paginas: {verPaginas(aux)}")
+				print(f"Nivel de prioridad: {verPrioridad(aux)}")
+				print(f"Fecha: {verFecha(aux)}")
+				print(f"Hora: {verHora(aux)}")
+				print("Trabajo eliminado.")
 				eliminarTrabajo(centro,aux)
 			else:
 				i=i+1
@@ -213,25 +269,28 @@ while(True):
 	#7: Filtrado por Franja Horaria (nueva cola)
 	elif(opcion==7):
 		print("Listado de trabajos dentro de una franja horaria")
-		i=0
 		colaFranja=crearCola()
-		min=input("Ingrese inicio de franja horaria(HH:MM): ")
-		hora_min=datetime.strptime(min,"%H:%M").time()
-		max=input("Ingrese final de franja horaria(HH:MM): ")
-		hora_max=datetime.strptime(max,"%H:%M").time()
-		for i in range(tamanio(centro)):
-			aux=recuperarTrabajo(centro,i)
-			if(hora_min<=verHora(aux)<=hora_max):
-				print(f'''
-				JobID: {verJobid(aux)}
-				Nombre: {verNombre(aux)}
-				Formato: {verFormato(aux)}
-				Cantidad de paginas: {verPaginas(aux)}
-				Nivel de priorirdad: {verPrioridad(aux)}
-				Fecha: {verFecha(aux)}
-				Hora: {verHora(aux)}
-				''')
-				encolar(colaFranja,aux)
+		try:
+			min=input("Ingrese inicio de franja horaria(HH:MM): ")
+			hora_min=datetime.strptime(min,"%H:%M").time()
+			max=input("Ingrese final de franja horaria(HH:MM): ")
+			hora_max=datetime.strptime(max,"%H:%M").time()
+			for i in range(tamanio(centro)):
+				aux=recuperarTrabajo(centro,i)
+				hora_obj=datetime.strptime(verHora(aux),"%H:%M").time()
+				if(hora_min<=hora_obj<=hora_max):
+					encolar(colaFranja,aux)
+			while not esVacia(colaFranja):
+				aux=desencolar(colaFranja)
+				print(f"\nJobID: {verJobid(aux)}")
+				print(f"Nombre: {verNombre(aux)}")
+				print(f"Formato: {verFormato(aux)}")
+				print(f"Cantidad de paginas: {verPaginas(aux)}")
+				print(f"Nivel de prioridad: {verPrioridad(aux)}")
+				print(f"Fecha: {verFecha(aux)}")
+				print(f"Hora: {verHora(aux)}")
+		except ValueError:
+			print("Error: Formato de hora invalido")
 
 	#8: Cierre de Menu
 	elif(opcion==0):
