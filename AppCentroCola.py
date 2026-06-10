@@ -1,4 +1,3 @@
-from TADCentroImpresion import *
 from TADCentroImpresionCola import *
 from TADTrabajo import *
 from TADCola import *
@@ -37,13 +36,14 @@ def pedir_formato():
 			print("-> Formato invalida. Solo se permite: PDF, Imagen o Texto.")
 
 def existejid(centro, jid):
-	if(centroVacio(centro)==False):
-		for i in range(tamanio(centro)):
+	existe = False
+	if not centroVacio(centro):
+		for i in range (tamanio(centro)):
 			aux = desencolarTrabajo(centro)
-			if (verJobid(aux) == jid):
-				return True
-			encolarTrabajo(centro,aux)
-		return False
+			if verJobid(aux) == jid:
+				existe = True
+			encolarTrabajo(centro, aux)
+	return existe
 
 centro = crearColaCentro()
 
@@ -55,7 +55,7 @@ encolarTrabajo(centro, t0)
 
 t1 = crearTrabajo()
 cargarTrabajo(t1, 1, "ana", "imagen", 15, "media", "20/05/2026", "13:00")
-agregarTrabajo(centro, t1)
+encolarTrabajo(centro, t1)
 
 t2 = crearTrabajo()
 cargarTrabajo(t2, 2, "carlos", "texto", 5, "alta", "20/05/2026", "14:00")
@@ -156,13 +156,13 @@ while True:
 
 			#Muestra los datos cargados para verificar que sea correcto
 			print("Cargado correctamente")
-			print(verJobid(trabajo))
-			print(verNombre(trabajo))
-			print(verFormato(trabajo))
-			print(verPaginas(trabajo))
-			print(verPrioridad(trabajo))
-			print(verFecha(trabajo))
-			print(verHora(trabajo))
+			print(f"\nJobID: {verJobid(trabajo)}")
+			print(f"Nombre: {verNombre(trabajo)}")
+			print(f"Formato: {verFormato(trabajo)}")
+			print(f"Cantidad de paginas: {verPaginas(trabajo)}")
+			print(f"Nivel de prioridad: {verPrioridad(trabajo)}")
+			print(f"Fecha: {verFecha(trabajo)}")
+			print(f"Hora: {verHora(trabajo)}")
 			encolarTrabajo(centro, trabajo)
 
 			#Consulta para seguir cargando trabajo
@@ -188,7 +188,7 @@ while True:
 					break
 
 				else:
-						print("ID valido")
+						print("Error: El ID no existe en la cola")
 			except ValueError:
 				print("Error: El ID debe ser un numero entero")
 				continue
@@ -245,21 +245,17 @@ while True:
 			print("Error: el mes ingreado no es valido. Ingresar de 01 a 12")
 
 	#6: Filtrado por Formato (eliminar)
-	elif(opcion==6):
+	elif opcion == 6:
 		print("Eliminacion por formato de trabajo")
-		form=pedir_formato()
-		#Este i va a controlar la cantidad de operaciones que se hacen en la cola
-		i=1
-		ini=tamanio(centro)
-		while(True):
-			if(esVacio(centro)==True):
-				print("No hay trabajos en la cola de trabajo. Volviendo al menu...")
-				break
-			if(i==ini):
-				break
-			else:
-				aux=desencolarTrabajo(centro)
-				if(form==verFormato(aux).lower()):
+		form = pedir_formato()
+		if centroVacio(centro):
+			print("No hay trabajos en la cola de trabajo.")
+		else:
+			tamanio_original = tamanio(centro)
+			for _ in range(tamanio_original):
+				aux = desencolarTrabajo(centro)
+				#Si coincide con el formato, lo muetra e ignora (No se vuelve a encolar)
+				if form == verFormato(aux).lower():
 					print(f"\nJobID: {verJobid(aux)}")
 					print(f"Nombre: {verNombre(aux)}")
 					print(f"Formato: {verFormato(aux)}")
@@ -268,11 +264,8 @@ while True:
 					print(f"Fecha: {verFecha(aux)}")
 					print(f"Hora: {verHora(aux)}")
 					print("Trabajo eliminado.")
-					eliminarTrabajo(centro,aux)
-					i=i+1
 				else:
-					encolarTrabajo(centro,aux)
-					i=i+1
+					encolarTrabajo(centro, aux)
 
 	#7: Filtrado por Franja Horaria (nueva cola)
 	elif(opcion==7):

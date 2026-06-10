@@ -3,15 +3,15 @@ from TADCola import *
 
 def crearColaCentro():
 	#Crea un centro de impresion vacio
-	return []
+	return crearCola()
 
 def encolarTrabajo(centro,trabajo):
 	#Agrega un trabajo al centro de impresion
-	centro.append(trabajo)
+	encolar(centro, trabajo)
 
 def desencolarTrabajo(centro):
 	#Elimina el primer trabajo de la cola
-	desencolar(centro)
+	return desencolar(centro)
 
 def tamanio(centro):
 	#Retorna cantidad de trabajos
